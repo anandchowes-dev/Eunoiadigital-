@@ -1,0 +1,729 @@
+import React, { useState, useEffect } from 'react';
+import { 
+  Menu, X, Smartphone, Globe, BarChart, Cpu, Palette, 
+  ArrowRight, Check, Send, MessageCircle, Play, 
+  Users, Target, Rocket, Briefcase, Star, Plus, Shield,
+  Instagram, Linkedin, Facebook, Youtube
+} from 'lucide-react';
+
+// --- CONFIGURATION ---
+const APP_NAME = "EUNOIA Digital Studio";
+const PHONE = "7989416230";
+const WHATSAPP_LINK = "https://wa.me/917989416230";
+const FACEBOOK_LINK = "https://facebook.com/eunoia.studio"; 
+const INSTAGRAM_LINK = "https://instagram.com/eunoia.studio";
+const YOUTUBE_LINK = "https://youtube.com/@eunoiastudio";
+const LINKEDIN_LINK = "https://linkedin.com/company/eunoia-studio";
+const BRAND_COLOR = "#00D2FF";
+
+const App = () => {
+  const [currentPage, setCurrentPage] = useState('home');
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showOfferPopup, setShowOfferPopup] = useState(false);
+  const [showChat, setShowChat] = useState(false);
+  const [leads, setLeads] = useState([]);
+  const [chatMessages, setChatMessages] = useState([
+    { role: 'bot', text: 'Hi! I am the EUNOIA AI. How can I help you scale your business today?' }
+  ]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowOfferPopup(true);
+    }, 6000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [currentPage]);
+
+  const handleLeadSubmit = (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const newLead = {
+      id: Date.now(),
+      name: formData.get('name'),
+      email: formData.get('email'),
+      message: formData.get('message'),
+      timestamp: new Date().toLocaleString(),
+      status: 'New'
+    };
+    setLeads([newLead, ...leads]);
+    e.target.reset();
+    alert("Inquiry received! Our team will contact you shortly.");
+  };
+
+  const handleChatSubmit = (e) => {
+    e.preventDefault();
+    const input = e.target.chatInput.value;
+    if (!input) return;
+    setChatMessages([...chatMessages, { role: 'user', text: input }]);
+    e.target.reset();
+    setTimeout(() => {
+      setChatMessages(prev => [...prev, { role: 'bot', text: "That sounds interesting! Let's discuss this further via WhatsApp or our contact form for a custom quote." }]);
+    }, 1000);
+  };
+
+  // --- UI COMPONENTS ---
+
+  const Navigation = () => (
+    <nav className="fixed top-0 w-full z-50 bg-[#0A0A0A]/80 backdrop-blur-xl border-b border-white/10 px-6">
+      <div className="max-w-7xl mx-auto h-20 flex items-center justify-between">
+        <div className="flex items-center gap-2 cursor-pointer" onClick={() => setCurrentPage('home')}>
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#00D2FF] to-[#0055FF] flex items-center justify-center font-bold text-white shadow-lg shadow-[#00D2FF]/20">E</div>
+          <span className="text-xl font-bold tracking-tighter text-white">EUNOIA</span>
+        </div>
+
+        <div className="hidden md:flex items-center gap-8 text-sm font-medium text-gray-400">
+          {['home', 'about', 'services', 'packages', 'projects', 'careers', 'contact'].map(page => (
+            <button 
+              key={page} 
+              onClick={() => setCurrentPage(page)}
+              className={`capitalize transition-colors hover:text-[#00D2FF] ${currentPage === page ? 'text-[#00D2FF]' : ''}`}
+            >
+              {page}
+            </button>
+          ))}
+          <button 
+             onClick={() => setCurrentPage('contact')}
+             className="bg-[#00D2FF] text-black px-6 py-2.5 rounded-full font-semibold hover:brightness-110 transition-all shadow-lg shadow-[#00D2FF]/20"
+          >
+            Start Project
+          </button>
+        </div>
+
+        <button className="md:hidden text-white" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+          {isMenuOpen ? <X /> : <Menu />}
+        </button>
+      </div>
+      
+      {isMenuOpen && (
+        <div className="md:hidden absolute top-20 left-0 w-full bg-[#0A0A0A] border-b border-white/10 p-6 flex flex-col gap-4 animate-in slide-in-from-top duration-300">
+          {['home', 'about', 'services', 'packages', 'projects', 'careers', 'contact'].map(page => (
+            <button key={page} onClick={() => {setCurrentPage(page); setIsMenuOpen(false)}} className="capitalize text-left text-lg text-gray-300">{page}</button>
+          ))}
+        </div>
+      )}
+    </nav>
+  );
+
+  const Footer = () => (
+    <footer className="bg-[#070707] border-t border-white/5 pt-20 pb-10">
+      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+        <div className="space-y-6">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg bg-[#00D2FF] flex items-center justify-center font-bold text-black text-xs">E</div>
+            <span className="text-xl font-bold text-white tracking-tighter">EUNOIA</span>
+          </div>
+          <p className="text-gray-500 text-sm leading-relaxed">
+            Human Creativity. AI Precision. We build digital experiences that define the future of business.
+          </p>
+          <div className="flex items-center gap-4 pt-4">
+            <a href={FACEBOOK_LINK} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-gray-400 hover:text-[#00D2FF] hover:border-[#00D2FF] transition-all">
+              <Facebook size={18} />
+            </a>
+            <a href={INSTAGRAM_LINK} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-gray-400 hover:text-[#00D2FF] hover:border-[#00D2FF] transition-all">
+              <Instagram size={18} />
+            </a>
+            <a href={YOUTUBE_LINK} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-gray-400 hover:text-[#00D2FF] hover:border-[#00D2FF] transition-all">
+              <Youtube size={18} />
+            </a>
+            <a href={LINKEDIN_LINK} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-gray-400 hover:text-[#00D2FF] hover:border-[#00D2FF] transition-all">
+              <Linkedin size={18} />
+            </a>
+          </div>
+        </div>
+        <div>
+          <h4 className="text-white font-bold mb-6">Quick Links</h4>
+          <div className="flex flex-col gap-3 text-gray-500 text-sm">
+            <button onClick={() => setCurrentPage('home')} className="hover:text-[#00D2FF] text-left">Home</button>
+            <button onClick={() => setCurrentPage('projects')} className="hover:text-[#00D2FF] text-left">Portfolio</button>
+            <button onClick={() => setCurrentPage('packages')} className="hover:text-[#00D2FF] text-left">Pricing</button>
+            <button onClick={() => setCurrentPage('careers')} className="hover:text-[#00D2FF] text-left">Careers</button>
+          </div>
+        </div>
+        <div>
+          <h4 className="text-white font-bold mb-6">Services</h4>
+          <div className="flex flex-col gap-3 text-gray-500 text-sm">
+            <button onClick={() => setCurrentPage('services')} className="hover:text-[#00D2FF] text-left">Web Design</button>
+            <button onClick={() => setCurrentPage('services')} className="hover:text-[#00D2FF] text-left">Digital Marketing</button>
+            <button onClick={() => setCurrentPage('services')} className="hover:text-[#00D2FF] text-left">Branding</button>
+            <button onClick={() => setCurrentPage('services')} className="hover:text-[#00D2FF] text-left">AI Automation</button>
+          </div>
+        </div>
+        <div>
+          <h4 className="text-white font-bold mb-6">Contact Us</h4>
+          <div className="text-gray-500 text-sm space-y-4">
+            <p className="flex items-center gap-2"><Smartphone size={16}/> +91 {PHONE}</p>
+            <p className="flex items-center gap-2"><Globe size={16}/> contact@eunoia.studio</p>
+            <p className="opacity-60">Hyderabad, India</p>
+          </div>
+        </div>
+      </div>
+      <div className="text-center border-t border-white/5 pt-10 text-gray-600 text-xs">
+        © 2024 EUNOIA Digital Studio. All Rights Reserved.
+      </div>
+    </footer>
+  );
+
+  // --- PAGES ---
+
+  const HomePage = () => (
+    <div className="animate-in fade-in duration-700">
+      {/* Hero Section */}
+      <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden pt-20">
+        <div className="absolute inset-0 z-0">
+          <div className="absolute inset-0 bg-[#0A0A0A]/60 z-10"></div>
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#00D2FF]/20 rounded-full blur-[120px] animate-pulse"></div>
+          <div className="w-full h-full bg-gradient-to-b from-[#0F172A] to-[#0A0A0A] flex items-center justify-center">
+            <div className="opacity-20 flex flex-wrap gap-10 justify-center">
+                {[...Array(20)].map((_, i) => <Cpu key={i} size={40} className="text-[#00D2FF]"/>)}
+            </div>
+          </div>
+        </div>
+        
+        <div className="relative z-20 max-w-4xl mx-auto text-center px-6">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-[#00D2FF] text-xs font-bold tracking-widest uppercase mb-8">
+            <Star size={12}/> Human Creativity. AI Precision.
+          </div>
+          <h1 className="text-5xl md:text-8xl font-black text-white mb-6 tracking-tighter leading-none">
+            EUNOIA <br/>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00D2FF] to-[#0055FF]">Digital Studio</span>
+          </h1>
+          <p className="text-gray-400 text-lg md:text-xl mb-10 max-w-2xl mx-auto leading-relaxed">
+            We build high-conversion, premium digital experiences for forward-thinking brands.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <button onClick={() => setCurrentPage('contact')} className="w-full sm:w-auto px-10 py-4 bg-[#00D2FF] text-black font-bold rounded-xl flex items-center justify-center gap-2 hover:scale-105 transition-transform">
+              Start Project <ArrowRight size={20}/>
+            </button>
+            <button onClick={() => setCurrentPage('projects')} className="w-full sm:w-auto px-10 py-4 bg-white/5 text-white font-bold rounded-xl border border-white/10 hover:bg-white/10 transition-all">
+              View Work
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* MARQUEE - FAST SPEED (12s) + MOVED DOWN (mt-24) */}
+      <div className="w-full bg-black border-y border-white/5 py-10 overflow-hidden relative mt-24">
+        <div className="flex whitespace-nowrap animate-marquee">
+          {[...Array(6)].map((_, i) => (
+            <div key={i} className="flex items-center gap-16 px-8">
+              <div className="flex items-center gap-4 text-gray-500 font-black text-2xl italic tracking-widest uppercase">
+                 <div className="w-8 h-8 rounded-full border-2 border-[#00D2FF] flex items-center justify-center p-1">
+                    <div className="w-2 h-2 rounded-full bg-[#00D2FF]"></div>
+                 </div>
+                 AI-Driven Strategy
+              </div>
+              <div className="flex items-center gap-4 text-gray-500 font-black text-2xl italic tracking-widest uppercase">
+                 <div className="text-[#00D2FF]">
+                   <Palette size={28} />
+                 </div>
+                 Premium Execution
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Services Preview */}
+      <section className="py-24 px-6 max-w-7xl mx-auto text-center">
+        <div className="flex flex-col items-center mb-16">
+           <div className="w-14 h-14 bg-black border border-[#00D2FF]/30 rounded-2xl flex items-center justify-center mb-6 shadow-xl shadow-[#00D2FF]/10">
+              <Cpu className="text-[#00D2FF]" size={28}/>
+           </div>
+           <h2 className="text-4xl md:text-6xl font-black text-white">Core Expertise</h2>
+        </div>
+        <div className="max-w-md mx-auto p-10 rounded-[40px] bg-white/5 border border-white/10 hover:border-[#00D2FF]/50 transition-all group relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-[#00D2FF]/10 blur-3xl group-hover:bg-[#00D2FF]/20 transition-all"></div>
+          <Globe className="text-[#00D2FF] mx-auto mb-6 group-hover:scale-110 transition-transform" size={56} />
+          <h3 className="text-2xl font-bold text-white mb-4">Web Development</h3>
+          <p className="text-gray-400 mb-10 leading-relaxed">Lightning-fast, mobile-responsive websites that turn casual visitors into loyal customers.</p>
+          <button onClick={() => setCurrentPage('services')} className="w-full py-4 bg-white/5 text-white font-bold rounded-2xl hover:bg-[#00D2FF] hover:text-black transition-all flex items-center justify-center gap-2">
+            Explore More <ArrowRight size={18}/>
+          </button>
+        </div>
+      </section>
+
+      {/* Package Preview - Growth Package Featured */}
+      <section className="py-24 px-6 bg-[#070707]">
+        <div className="max-w-7xl mx-auto text-center">
+          <h2 className="text-4xl font-bold text-white mb-4">Pricing Preview</h2>
+          <p className="text-gray-500 mb-16">Transparent pricing for every stage of growth.</p>
+          
+          <div className="max-w-md mx-auto relative group">
+            <div className="absolute -inset-1 bg-gradient-to-r from-[#00D2FF] to-[#0055FF] rounded-[40px] blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
+            <div className="relative bg-[#0A0A0A] border border-[#00D2FF] p-10 rounded-[40px] shadow-2xl">
+              <div className="inline-block bg-[#00D2FF] text-black text-[10px] font-black uppercase tracking-widest px-4 py-1.5 rounded-full mb-6">
+                Most Popular
+              </div>
+              <h3 className="text-3xl font-black text-white mb-2">Growth Package</h3>
+              <p className="text-gray-500 text-sm mb-8 italic">Perfect for scaling businesses</p>
+              <div className="text-5xl font-black text-[#00D2FF] mb-10">₹9,999</div>
+              
+              <ul className="text-left space-y-4 mb-10">
+                {["5-7 Pages Premium UI", "Speed Optimization", "SEO Core Setup", "WhatsApp CRM Integration"].map(f => (
+                  <li key={f} className="flex items-center gap-3 text-gray-300 text-sm">
+                    <Check size={16} className="text-[#00D2FF]"/> {f}
+                  </li>
+                ))}
+              </ul>
+
+              <button 
+                onClick={() => setCurrentPage('packages')} 
+                className="w-full py-5 bg-[#00D2FF] text-black font-black rounded-2xl flex items-center justify-center gap-2 hover:brightness-110 transition-all"
+              >
+                View All Packages <ArrowRight size={20}/>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Projects */}
+      <section className="py-24">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex justify-between items-end mb-16">
+            <div>
+              <h2 className="text-4xl font-bold text-white mb-4">Latest Work</h2>
+              <p className="text-gray-500">Excellence in every pixel.</p>
+            </div>
+            <button onClick={() => setCurrentPage('projects')} className="text-[#00D2FF] font-bold flex items-center gap-2 hover:gap-4 transition-all">View All Projects <ArrowRight size={18}/></button>
+          </div>
+          <div className="grid md:grid-cols-2 gap-8">
+            {[1, 2].map(i => (
+              <div key={i} className="group relative aspect-video rounded-[32px] overflow-hidden bg-white/5 border border-white/10">
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60"></div>
+                <div className="absolute bottom-10 left-10">
+                  <h4 className="text-2xl font-bold text-white mb-1">Modern Brand {i}</h4>
+                  <p className="text-[#00D2FF] text-sm font-bold uppercase tracking-widest">E-Commerce Solution</p>
+                </div>
+                <div className="w-full h-full flex items-center justify-center text-white/5 font-black text-6xl">WORK {i}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Google Reviews */}
+      <section className="py-24 px-6 max-w-7xl mx-auto">
+        <div className="bg-white/5 rounded-[40px] p-12 border border-white/10 relative overflow-hidden">
+          <div className="flex flex-col md:flex-row items-center justify-between mb-12 gap-6 relative z-10">
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center text-black font-black text-2xl">G</div>
+              <div>
+                <h4 className="text-2xl font-bold text-white">Top Rated Agency</h4>
+                <p className="text-gray-500">120+ Verified Client Reviews</p>
+              </div>
+            </div>
+            <div className="flex gap-1 text-yellow-400">
+              {[...Array(5)].map((_, i) => <Star key={i} fill="currentColor" size={24}/>)}
+            </div>
+          </div>
+          <div className="grid md:grid-cols-3 gap-8 relative z-10">
+            {[
+              { name: "Rahul S.", text: "Eunoia completely transformed our online presence. The AI tools they integrated are game-changers." },
+              { name: "Priya V.", text: "Exceeded all expectations. The design is clean, fast, and exactly what we wanted for our luxury brand." },
+              { name: "Amit K.", text: "Professional, innovative, and results-driven. Our lead generation increased by 200% in 3 months." }
+            ].map((review, i) => (
+              <div key={i} className="p-8 rounded-3xl bg-black/40 border border-white/5 italic text-gray-400 leading-relaxed">
+                "{review.text}"
+                <p className="mt-6 not-italic font-bold text-white text-sm">— {review.name}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+
+  const AboutPage = () => (
+    <div className="pt-32 pb-24 px-6 animate-in fade-in duration-500">
+      <div className="max-w-7xl mx-auto">
+        <div className="grid md:grid-cols-2 gap-20 items-center mb-32">
+          <div>
+            <h1 className="text-6xl font-black text-white mb-8">About <br/><span className="text-[#00D2FF]">EUNOIA.</span></h1>
+            <p className="text-gray-400 text-lg leading-relaxed mb-6">
+              Founded on the principle of "beautiful thinking," we bridge the gap between human intuition and machine efficiency.
+            </p>
+            <div className="grid grid-cols-2 gap-6 mt-12">
+              <div className="p-6 rounded-2xl bg-white/5 border border-white/10 text-center">
+                <h3 className="text-3xl font-bold text-[#00D2FF] mb-2">5+</h3>
+                <p className="text-gray-500 text-sm">Years Experience</p>
+              </div>
+              <div className="p-6 rounded-2xl bg-white/5 border border-white/10 text-center">
+                <h3 className="text-3xl font-bold text-[#00D2FF] mb-2">100+</h3>
+                <p className="text-gray-500 text-sm">Projects Delivered</p>
+              </div>
+            </div>
+          </div>
+          <div className="aspect-square bg-white/5 rounded-[60px] border border-white/10 flex items-center justify-center">
+             <Cpu size={120} className="text-[#00D2FF] opacity-30"/>
+          </div>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-8 mb-32">
+           {[
+             { title: "Mission", text: "Empowering brands through cutting-edge technology and artistic precision.", icon: <Target className="mb-6 text-[#00D2FF]"/> },
+             { title: "Vision", text: "To be the catalyst for the next generation of digital-first global enterprises.", icon: <Rocket className="mb-6 text-[#00D2FF]"/> },
+             { title: "Values", text: "Unyielding innovation, transparent communication, and extreme results.", icon: <Shield className="mb-6 text-[#00D2FF]"/> }
+           ].map((item, i) => (
+             <div key={i} className="p-12 rounded-[40px] bg-white/5 border border-white/10 hover:border-[#00D2FF]/30 transition-all">
+               {item.icon}
+               <h3 className="text-2xl font-bold text-white mb-4">{item.title}</h3>
+               <p className="text-gray-500 text-sm leading-relaxed">{item.text}</p>
+             </div>
+           ))}
+        </div>
+
+        <h2 className="text-4xl font-bold text-white text-center mb-16">Meet Our Leadership</h2>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+           {[
+             { name: "Anand Chowdary", role: "Founder", intro: "A digital strategist with over 8 years of experience in product design." },
+             { name: "Sarah Jenkins", role: "Creative Director", intro: "Pushing boundaries in visual storytelling and premium branding." },
+             { name: "Vikram Reddy", role: "CTO", intro: "Specialist in AI integration and scalable cloud architecture." },
+             { name: "Elena Marcus", role: "Head of Marketing", intro: "Expert in high-performance funnels and digital growth." }
+           ].map((member, i) => (
+             <div key={i} className="p-8 rounded-3xl bg-white/5 border border-white/10 group">
+               <div className="w-full aspect-square bg-white/5 rounded-2xl mb-6 flex items-center justify-center font-bold text-white/10 text-6xl group-hover:text-[#00D2FF]/20 transition-all">
+                 {member.name.charAt(0)}
+               </div>
+               <h3 className="text-xl font-bold text-white mb-1">{member.name}</h3>
+               <p className="text-[#00D2FF] text-xs font-bold uppercase tracking-widest mb-4">{member.role}</p>
+               <p className="text-gray-500 text-sm leading-relaxed">{member.intro}</p>
+             </div>
+           ))}
+        </div>
+      </div>
+    </div>
+  );
+
+  const ServicesPage = () => {
+    const services = [
+      { id: 'web', title: 'Web Design', icon: <Globe />, desc: 'Custom, high-speed websites crafted for conversions.', benefits: ['Custom UI/UX', 'SEO Optimized', 'Mobile First'], process: 'Brief → Prototype → Code → Review' },
+      { id: 'marketing', title: 'Digital Marketing', icon: <BarChart />, desc: 'Hyper-targeted campaigns for maximum ROI.', benefits: ['Performance Ads', 'Social Strategy', 'Content Funnels'], process: 'Data → Strategy → Launch → Scale' },
+      { id: 'branding', title: 'Branding', icon: <Palette />, desc: 'Visual identities that define your market position.', benefits: ['Logo System', 'Brand Guidelines', 'Asset Kit'], process: 'Insight → Identity → Asset Design' },
+      { id: 'ai', title: 'AI Automation', icon: <Cpu />, desc: 'Smart systems that save you 40+ hours per week.', benefits: ['AI Chatbots', 'Workflow Automation', 'CRM Integration'], process: 'Audit → System Build → Integration' },
+    ];
+
+    return (
+      <div className="pt-32 pb-24 animate-in fade-in duration-500">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center mb-20">
+            <h1 className="text-5xl font-black text-white mb-6 tracking-tighter">Premium Solutions</h1>
+            <p className="text-gray-500 max-w-2xl mx-auto">Scaling your business requires precision. We provide the tools.</p>
+          </div>
+          <div className="grid lg:grid-cols-2 gap-8">
+            {services.map(s => (
+              <div key={s.id} className="p-10 rounded-[40px] bg-white/5 border border-white/10 flex flex-col md:flex-row gap-8">
+                <div className="w-16 h-16 bg-[#00D2FF]/10 rounded-2xl flex items-center justify-center text-[#00D2FF] flex-shrink-0">
+                  {React.cloneElement(s.icon, { size: 32 })}
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold text-white mb-3">{s.title}</h3>
+                  <p className="text-gray-400 text-sm mb-6 leading-relaxed">{s.desc}</p>
+                  <div className="grid grid-cols-2 gap-4 mb-8">
+                    {s.benefits.map(b => (
+                      <div key={b} className="flex items-center gap-2 text-xs text-gray-500">
+                        <Check size={14} className="text-[#00D2FF]"/> {b}
+                      </div>
+                    ))}
+                  </div>
+                  <button onClick={() => setCurrentPage('contact')} className="px-8 py-3 border border-[#00D2FF] text-[#00D2FF] font-bold rounded-xl hover:bg-[#00D2FF] hover:text-black transition-all">Get Started</button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const PackagesPage = () => {
+    const [category, setCategory] = useState('web');
+
+    const webPackages = [
+      { name: "Starter", price: "4,999", features: ["1-3 Pages", "Basic UI", "Mobile Responsive", "Basic SEO"], popular: false },
+      { name: "Growth", price: "9,999", features: ["5-7 Pages", "Premium UI", "Speed Optimization", "SEO Core", "WhatsApp Integration"], popular: true },
+      { name: "Pro", price: "19,999", features: ["10+ Pages", "Custom Design", "Animations", "Lead System", "Support"], popular: false },
+      { name: "Custom", price: "Contact", features: ["AI Integration", "Full Automation", "Bespoke Features"], popular: false }
+    ];
+
+    const marketingPackages = [
+      { name: "Starter", price: "5,000/mo", features: ["Social Setup", "10 Posts", "Bio Optimization"], popular: false },
+      { name: "Growth", price: "10,000/mo", features: ["20 Posts", "Ads Management", "Strategy Setup", "Weekly Stats"], popular: true },
+      { name: "Pro", price: "20,000/mo", features: ["Full Management", "Lead Gen", "Multi-Ads", "Content Filming"], popular: false },
+      { name: "Custom", price: "Contact", features: ["Multi-Platform Scaling", "Influencer Strategy"], popular: false }
+    ];
+
+    const currentData = category === 'web' ? webPackages : marketingPackages;
+
+    return (
+      <div className="pt-32 pb-24 px-6 animate-in fade-in duration-500">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h1 className="text-5xl font-black text-white mb-10 tracking-tighter">Packages</h1>
+            <div className="inline-flex bg-white/5 p-1 rounded-2xl border border-white/10">
+              <button onClick={() => setCategory('web')} className={`px-8 py-3 rounded-xl font-bold transition-all ${category === 'web' ? 'bg-[#00D2FF] text-black shadow-lg shadow-[#00D2FF]/20' : 'text-gray-400 hover:text-white'}`}>Web Dev</button>
+              <button onClick={() => setCategory('marketing')} className={`px-8 py-3 rounded-xl font-bold transition-all ${category === 'marketing' ? 'bg-[#00D2FF] text-black shadow-lg shadow-[#00D2FF]/20' : 'text-gray-400 hover:text-white'}`}>Marketing</button>
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {currentData.map((pkg, i) => (
+              <div key={i} className={`relative p-8 rounded-[32px] border transition-all duration-300 ${pkg.popular ? 'bg-[#0F172A] border-[#00D2FF] shadow-2xl shadow-[#00D2FF]/10 ring-2 ring-[#00D2FF]/20' : 'bg-white/5 border-white/10'}`}>
+                {pkg.popular && (
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#00D2FF] text-black text-[10px] font-black uppercase tracking-widest px-4 py-1.5 rounded-full">Most Popular</div>
+                )}
+                <h3 className="text-2xl font-bold text-white mb-2">{pkg.name}</h3>
+                <div className="text-3xl font-black text-[#00D2FF] mb-8">₹{pkg.price}</div>
+                <div className="space-y-4 mb-10">
+                  {pkg.features.map(f => (
+                    <div key={f} className="flex items-center gap-3 text-sm text-gray-400">
+                      <Check size={14} className="text-[#00D2FF] flex-shrink-0"/> {f}
+                    </div>
+                  ))}
+                </div>
+                <button 
+                  onClick={() => window.open(WHATSAPP_LINK + `?text=Hi Eunoia, I'm interested in the ${pkg.name} ${category} package.`)}
+                  className={`w-full py-4 rounded-xl font-bold flex items-center justify-center gap-2 ${pkg.popular ? 'bg-[#00D2FF] text-black' : 'bg-white/10 text-white hover:bg-white/20'}`}
+                >
+                  Get Started <ArrowRight size={18}/>
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const ProjectsPage = () => (
+    <div className="pt-32 pb-24 px-6 animate-in fade-in duration-500">
+      <div className="max-w-7xl mx-auto">
+        <div className="text-center mb-20">
+          <h1 className="text-5xl font-black text-white mb-6">Portfolio</h1>
+          <p className="text-gray-500">Transforming visions into reality.</p>
+        </div>
+        <div className="grid md:grid-cols-2 gap-10">
+          {[
+            { title: "Quantum FinTech", category: "App Design / AI Integration" },
+            { title: "Lumina Luxury", category: "E-commerce / Branding" },
+            { title: "NextGen Real Estate", category: "Lead Systems" },
+            { title: "Stealth Tech", category: "Interactive Landing Page" }
+          ].map((project, i) => (
+            <div key={i} className="group cursor-pointer">
+              <div className="aspect-[16/9] bg-white/5 rounded-[40px] border border-white/10 mb-6 overflow-hidden relative">
+                 <div className="w-full h-full flex items-center justify-center text-white/5 font-black text-6xl group-hover:scale-105 transition-transform duration-700">PREVIEW {i+1}</div>
+              </div>
+              <h3 className="text-2xl font-bold text-white mb-1 group-hover:text-[#00D2FF] transition-colors">{project.title}</h3>
+              <p className="text-gray-500 text-sm font-bold uppercase tracking-widest">{project.category}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+
+  const CareersPage = () => (
+    <div className="pt-32 pb-24 px-6 animate-in fade-in duration-500">
+      <div className="max-w-7xl mx-auto">
+        <div className="text-center mb-20">
+          <h1 className="text-6xl font-black text-white mb-8">Join EUNOIA.</h1>
+          <p className="text-gray-400 text-lg max-w-2xl mx-auto leading-relaxed">We're looking for disruptors, artists, and engineers. No egos, just excellence.</p>
+        </div>
+        
+        <div className="grid md:grid-cols-2 gap-20 items-center mb-20">
+           <div className="space-y-6">
+              <h3 className="text-3xl font-bold text-white">Culture of Growth</h3>
+              <p className="text-gray-500 leading-relaxed">At Eunoia, we work on projects that challenge the status quo. You'll have the autonomy to create and the support to scale your skills.</p>
+              <div className="flex flex-wrap gap-4">
+                {['Remote Work', 'Competitive Pay', 'AI-First Workflow', 'Creative Freedom'].map(tag => (
+                  <span key={tag} className="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-xs text-gray-400">{tag}</span>
+                ))}
+              </div>
+           </div>
+           <div className="p-8 rounded-[40px] bg-[#0F172A] border border-white/10">
+             <h4 className="text-xl font-bold text-white mb-6">Quick Apply</h4>
+             <form className="space-y-4">
+                <input type="text" placeholder="Name" className="w-full bg-black/40 border border-white/10 rounded-xl p-4 text-white outline-none focus:border-[#00D2FF]"/>
+                <input type="email" placeholder="Email" className="w-full bg-black/40 border border-white/10 rounded-xl p-4 text-white outline-none focus:border-[#00D2FF]"/>
+                <select className="w-full bg-black/40 border border-white/10 rounded-xl p-4 text-gray-400 outline-none focus:border-[#00D2FF]">
+                  <option>Select Role</option>
+                  <option>Designer</option>
+                  <option>Developer</option>
+                  <option>Marketer</option>
+                </select>
+                <button type="button" className="w-full py-4 bg-[#00D2FF] text-black font-black rounded-xl">Send Profile</button>
+             </form>
+           </div>
+        </div>
+
+        <div className="space-y-4">
+           {["Senior Product Designer", "React Developer", "Content Strategist"].map(job => (
+             <div key={job} className="p-8 rounded-3xl bg-white/5 border border-white/10 flex justify-between items-center group hover:bg-white/10 transition-all">
+                <span className="text-xl font-bold text-white">{job}</span>
+                <button className="px-8 py-3 bg-white/5 text-white rounded-xl group-hover:bg-[#00D2FF] group-hover:text-black transition-all">Apply</button>
+             </div>
+           ))}
+        </div>
+      </div>
+    </div>
+  );
+
+  const ContactPage = () => (
+    <div className="pt-32 pb-24 px-6 animate-in fade-in duration-500">
+      <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-20">
+        <div>
+          <h1 className="text-6xl font-black text-white mb-8 leading-tight">Build the <br/><span className="text-[#00D2FF]">Future.</span></h1>
+          <p className="text-gray-400 text-lg mb-12">Whether you're starting fresh or scaling high, our studio provides the digital horsepower you need.</p>
+          
+          <div className="space-y-8 mb-12">
+            <div className="flex items-center gap-6">
+              <div className="w-14 h-14 rounded-2xl bg-[#00D2FF]/10 flex items-center justify-center text-[#00D2FF]">
+                <Smartphone size={24}/>
+              </div>
+              <div>
+                <p className="text-gray-500 text-xs uppercase tracking-widest font-bold mb-1">Direct Line</p>
+                <p className="text-white text-xl font-bold">+91 {PHONE}</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-6">
+              <div className="w-14 h-14 rounded-2xl bg-[#00D2FF]/10 flex items-center justify-center text-[#00D2FF]">
+                <MessageCircle size={24}/>
+              </div>
+              <div>
+                <p className="text-gray-500 text-xs uppercase tracking-widest font-bold mb-1">WhatsApp</p>
+                <p className="text-white text-xl font-bold">Instantly Available</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white/5 border border-white/10 rounded-[40px] p-10 md:p-16">
+          <form onSubmit={handleLeadSubmit} className="space-y-6">
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <label className="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em]">Name</label>
+                <input name="name" required type="text" className="w-full bg-black/40 border border-white/10 rounded-2xl p-4 text-white outline-none focus:border-[#00D2FF] transition-all"/>
+              </div>
+              <div className="space-y-2">
+                <label className="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em]">Email</label>
+                <input name="email" required type="email" className="w-full bg-black/40 border border-white/10 rounded-2xl p-4 text-white outline-none focus:border-[#00D2FF] transition-all"/>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <label className="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em]">Message</label>
+              <textarea name="message" required rows="4" className="w-full bg-black/40 border border-white/10 rounded-2xl p-4 text-white outline-none focus:border-[#00D2FF] transition-all"></textarea>
+            </div>
+            <button type="submit" className="w-full py-5 bg-[#00D2FF] text-black font-black rounded-2xl flex items-center justify-center gap-2 hover:brightness-110 transition-all">
+              Launch Inquiry <Send size={20}/>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="min-h-screen bg-[#0A0A0A] text-white selection:bg-[#00D2FF] selection:text-black">
+      <Navigation />
+      
+      <main>
+        {currentPage === 'home' && <HomePage />}
+        {currentPage === 'about' && <AboutPage />}
+        {currentPage === 'services' && <ServicesPage />}
+        {currentPage === 'packages' && <PackagesPage />}
+        {currentPage === 'projects' && <ProjectsPage />}
+        {currentPage === 'careers' && <CareersPage />}
+        {currentPage === 'contact' && <ContactPage />}
+      </main>
+
+      <Footer />
+
+      {/* Floating Elements */}
+      <div className="fixed bottom-6 right-6 flex flex-col gap-4 z-[100]">
+        {showChat && (
+          <div className="bg-[#0F172A] border border-white/10 w-80 h-96 rounded-3xl shadow-2xl flex flex-col animate-in slide-in-from-bottom duration-300 overflow-hidden">
+            <div className="bg-[#00D2FF] p-4 flex justify-between items-center text-black font-black text-xs uppercase tracking-widest">
+              <span>EUNOIA AI Agent</span>
+              <button onClick={() => setShowChat(false)}><X size={18}/></button>
+            </div>
+            <div className="flex-grow p-4 space-y-4 overflow-y-auto">
+              {chatMessages.map((msg, i) => (
+                <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                  <div className={`max-w-[85%] p-3 rounded-2xl text-xs leading-relaxed ${msg.role === 'user' ? 'bg-[#00D2FF] text-black font-medium' : 'bg-white/5 text-gray-300 border border-white/10'}`}>
+                    {msg.text}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <form onSubmit={handleChatSubmit} className="p-4 border-t border-white/10 bg-black/20">
+               <input name="chatInput" placeholder="How can we help?" className="w-full bg-transparent outline-none text-xs text-white" autoComplete="off"/>
+            </form>
+          </div>
+        )}
+        <button 
+          onClick={() => setShowChat(!showChat)}
+          className="w-16 h-16 rounded-full bg-black border border-white/10 flex items-center justify-center text-[#00D2FF] shadow-2xl hover:scale-110 transition-all"
+        >
+          <Cpu size={28}/>
+        </button>
+        <a 
+          href={WHATSAPP_LINK}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-16 h-16 rounded-full bg-[#25D366] flex items-center justify-center text-white shadow-2xl hover:scale-110 transition-all"
+        >
+          <MessageCircle size={28} fill="currentColor"/>
+        </a>
+      </div>
+
+      {/* Timed Offer Popup */}
+      {showOfferPopup && (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center px-6">
+          <div className="absolute inset-0 bg-black/80 backdrop-blur-md" onClick={() => setShowOfferPopup(false)}></div>
+          <div className="relative bg-[#0A0A0A] border border-white/10 p-12 rounded-[40px] max-w-lg w-full text-center shadow-2xl animate-in zoom-in duration-300">
+            <button className="absolute top-8 right-8 text-gray-500 hover:text-white transition-colors" onClick={() => setShowOfferPopup(false)}><X/></button>
+            <div className="w-20 h-20 bg-[#00D2FF]/20 rounded-full flex items-center justify-center text-[#00D2FF] mx-auto mb-8">
+              <Rocket size={40}/>
+            </div>
+            <h2 className="text-4xl font-black text-white mb-4 leading-tight">Scale Your Business Today</h2>
+            <p className="text-gray-400 mb-10 leading-relaxed">Claim your FREE strategy audit (worth ₹5,000) and discover how AI can double your revenue.</p>
+            <div className="flex flex-col gap-4">
+              <button 
+                onClick={() => {setCurrentPage('contact'); setShowOfferPopup(false)}} 
+                className="w-full py-5 bg-[#00D2FF] text-black font-black rounded-2xl hover:brightness-110 transition-all"
+              >
+                Claim Free Audit
+              </button>
+              <button onClick={() => setShowOfferPopup(false)} className="text-gray-600 text-sm font-bold hover:text-white transition-colors">I'll do it later</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <style dangerouslySetInnerHTML={{ __html: `
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800;900&display=swap');
+        body { font-family: 'Poppins', sans-serif; overflow-x: hidden; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0A0A0A; }
+        ::-webkit-scrollbar-thumb { background: #1A1A1A; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #00D2FF; }
+        
+        @keyframes marquee {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        .animate-marquee {
+          display: flex;
+          animation: marquee 12s linear infinite;
+        }
+      `}} />
+    </div>
+  );
+};
+
+export default App;
+
+
